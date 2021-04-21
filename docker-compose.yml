@@ -1,0 +1,69 @@
+version: "3.4"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: vetted
+    depends_on:
+      - database
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
+      - ./api:/srv/api:rw,cached
+      - ./front:/srv/front:rw,cached
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    environment:
+      APP_ENV: dev
+
+  caddy:
+    build:
+      context: .
+      target: vetted_caddy
+    depends_on:
+      - php
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost, http://localhost:8081}
+      SERVER_NAME_API: ${SERVER_NAME_API:-api.localhost, http://localhost:8080}
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./api/public:/srv/api/public:ro
+      - ./front/public:/srv/front/public:ro
+    ports:
+      # HTTP
+      - target: 8081
+        published: 8081
+        protocol: tcp
+      # HTTP
+      - target: 8080
+        published: 8080
+        protocol: tcp
+
+  database:
+    image: mysql:8
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=XnyexbUF
+      - MYSQL_DATABASE=vetted
+      - MYSQL_USER=vetted
+      - MYSQL_PASSWORD=XnyexbUF
+
+volumes:
+  front:
+  php_socket:
+  api:
+  caddy_data:
+  caddy_config:

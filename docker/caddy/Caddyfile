@@ -1,0 +1,14 @@
+{$SERVER_NAME} {
+    root * /srv/front/public
+    php_fastcgi unix//var/run/php/php-fpm.sock
+    encode gzip
+    file_server
+}
+
+{$SERVER_NAME_API} {
+    root * /srv/api/public
+    php_fastcgi unix//var/run/php/php-fpm.sock
+    encode zstd gzip
+    push
+    file_server
+}
