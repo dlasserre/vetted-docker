@@ -28,8 +28,8 @@ services:
     depends_on:
       - php
     environment:
-      SERVER_NAME: ${SERVER_NAME:-localhost, http://localhost:8081}
-      SERVER_NAME_API: ${SERVER_NAME_API:-api.localhost, http://localhost:8080}
+      SERVER_NAME: ${SERVER_NAME:-marketplace.vetted.fr, http://marketplace.vetted.fr:8081}
+      SERVER_NAME_API: ${SERVER_NAME_API:-api.vetted.fr, http://api.vetted.fr:8080}
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php

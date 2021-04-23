@@ -59,11 +59,12 @@ RUN mkdir /root/.ssh/
 # Copy over private key, and set permissions
 # Warning! Anyone who gets their hands on this image will be able
 # to retrieve this private key file from the corresponding image layer
-ADD id_rsa /root/.ssh/id_rsa
+ADD ./docker/id_rsa /root/.ssh/id_rsa
 
 # Create known_hosts
 RUN touch /root/.ssh/known_hosts
 
+RUN echo "172.24.0.4 api.vetted.fr" >> /etc/hosts
 ###> recipes ###
 ###< recipes ###
 
@@ -83,13 +84,13 @@ ENV PATH="${PATH}:/root/.composer/vendor/bin"
 WORKDIR /srv/api
 # build for production
 ARG APP_ENV=dev
-RUN git clone git@github.com:dlasserre/vetted.git /srv/api
+RUN git clone https://dlasserre:XnyexbUF78!!@github.com/dlasserre/vetted-api.git /srv/api
 VOLUME /srv/api/var
 
 WORKDIR /srv/front
 # build for production
 ARG APP_ENV=dev
-RUN git clone git@github.com:dlasserre/vetted.git /srv/front
+RUN git clone https://dlasserre:XnyexbUF78!!@github.com/dlasserre/vetted-front.git /srv/front
 VOLUME /srv/front/var
 
 COPY ./docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
