@@ -64,7 +64,6 @@ ADD ./docker/id_rsa /root/.ssh/id_rsa
 # Create known_hosts
 RUN touch /root/.ssh/known_hosts
 
-RUN echo "172.24.0.4 api.vetted.fr" >> /etc/hosts
 ###> recipes ###
 ###< recipes ###
 
@@ -85,6 +84,9 @@ WORKDIR /srv/api
 # build for production
 ARG APP_ENV=dev
 RUN git clone https://dlasserre:XnyexbUF78!!@github.com/dlasserre/vetted-api.git /srv/api
+RUN mkdir -p /srv/api/var/cache/prod /srv/api/var/cache/dev /srv/api/var/cache/test /srv/api/var/log \
+   && chown -R www-data:www-data /srv/api/var/ \
+   && chmod -R ug+rwX /srv/api/var/
 VOLUME /srv/api/var
 
 WORKDIR /srv/front
